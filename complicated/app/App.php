@@ -8,14 +8,22 @@ use App\ApiHandlers\CurrencyRateHandlerInterface;
 
 class App
 {
-    protected $currencyRateHandler;
+    // Object of class that receives the exchange rate
+    protected CurrencyRateHandlerInterface $currencyRateHandler;
 
+    /**
+     * App constructor. Dependency injection
+     * @param CurrencyRateHandlerInterface $currencyRateHandler
+     */
     public function __construct(CurrencyRateHandlerInterface $currencyRateHandler)
     {
         $this->currencyRateHandler = $currencyRateHandler;
     }
 
-    public function run()
+    /**
+     * Main application method
+     */
+    public function run() : void
     {
         header("Content-Type: application/json; charset=UTF-8");
 
