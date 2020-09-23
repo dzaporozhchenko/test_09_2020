@@ -14,31 +14,32 @@ $xml = simplexml_load_string($response);
 if ($xml === false) {
     exitWithError('Unable to parse server response');
 } else {
-    $currencies = [];
-    foreach (($xml->Valute ?? []) as $item) {
-        $currencies[(string) $item->CharCode] = [
+    $currencies = array();
+
+    if (empty($xml->Valute)) {
+        exitWithError('Server response doesn\'t contain currency rates');
+    }
+
+    foreach (($xml->Valute) as $item) {
+        $currencies[(string) $item->CharCode] = array(
             'numCode' => (string) $item->NumCode,
             'charCode' => (string) $item->CharCode,
             'nominal'   => (string) $item->Nominal,
             'name'      => (string) $item->Name,
             'rate'      => (string) $item->Value
-        ];
+        );
     }
 
-    if (empty($currencies)) {
-        exitWithError('Server response doesn\'t contain currency rates');
-    }
-
-    echo json_encode([
+    echo json_encode(array(
         'error' => false,
         'data'  => $currencies
-    ]);
+    ));
 }
 
 function exitWithError($errorMsg) {
-    echo json_encode([
+    echo json_encode(array(
         'error' => true,
         'errorMsg' => $errorMsg
-    ]);
+    ));
     exit(1);
 }
